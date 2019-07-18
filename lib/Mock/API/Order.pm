@@ -33,7 +33,13 @@ sub handle_request {
         last if $i >= 10;
     }
 
-    $response->{data} = \@licenses;
+    if ( scalar( @licenses ) )  {
+        $response->{data} = \@licenses;
+    }
+    else {
+        $response->{data} = 'There was nothing returned';
+        $response->{result} = 0;
+    }
 
     return $response;
 }
