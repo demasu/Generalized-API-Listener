@@ -5,9 +5,11 @@ use Dancer2;
 use Mock::API::Order;
 use Mock::API::Cancel;
 
-use JSON::MaybeXS;
+use JSON::MaybeXS ();
 
 our $VERSION = '0.1';
+
+set 'show_errors' => 0;
 
 use Data::Dumper;
 $Data::Dumper::Indent = 3;
@@ -66,6 +68,18 @@ post '/cancel' => sub {
 
     print STDERR "# API.pm: Returning result\n";
     return $result;
+};
+
+get '/:endpoint' => sub {
+    my $endpoint = route_parameters->get('endpoint');
+
+    my $response = {
+        message  => 'There was no route found for the requested endpoint.',
+        endpoint => $endpoint,
+        error    => 1
+    };
+
+    return JSON::MaybeXS::encode_json( $response );
 };
 
 true;
